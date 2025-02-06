@@ -1,5 +1,6 @@
-import { useState, FormEvent, ChangeEvent } from "react"
+import { useState, useEffect, FormEvent, ChangeEvent } from "react"
 import { validateForm } from "../util/validate-form"
+import { fetchISAInvestmentOptions } from "../mock/mockApi"
 import {
   PageContainer,
   FormContainer,
@@ -18,27 +19,23 @@ interface Fund {
   name: string
 }
 
-interface ISAInvestmentFormProps {
-  availableFunds?: Fund[]
-  minInvestment?: number
-  maxInvestment?: number
-}
+interface ISAInvestmentFormProps {}
 
 interface FormData {
   fund: string
   amount: number | ""
 }
 
-const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
-  availableFunds = [
-    { id: "equities", name: "Cushon Equities Fund" },
-    { id: "bonds", name: "Cushon Bonds Fund" },
-    { id: "mixed", name: "Cushon Mixed Fund" },
-  ],
-  minInvestment = 25,
-  maxInvestment = 20000,
-}) => {
+const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = () => {
+  const [availableFunds, setAvailableFunds] = useState<Fund[]>([])
+  const [minInvestment, setMinInvestment] = useState<number>(0)
+  const [maxInvestment, setMaxInvestment] = useState<number>(0)
+
   const [submitted, setSubmitted] = useState(false)
+  const [submittedData, setSubmittedData] = useState<{
+    amount: number
+    fundName: string
+  } | null>(null)
   const [formData, setFormData] = useState<FormData>({
     fund: "",
     amount: "",
@@ -48,6 +45,15 @@ const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
     fund: "",
     amount: "",
   })
+
+  // Fetch mock API data on component mount
+  useEffect(() => {
+    fetchISAInvestmentOptions().then((data: any) => {
+      setAvailableFunds(data.availableFunds)
+      setMinInvestment(data.minInvestment)
+      setMaxInvestment(data.maxInvestment)
+    })
+  }, [])
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -60,12 +66,19 @@ const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
     setErrors(validationResults)
 
     if (validationResults.isValid) {
-      console.log("Investment Data:", formData)
-      setSubmitted(true)
-      setFormData({ fund: "", amount: "" })
+      const selectedFund = availableFunds.find((f) => f.id === formData.fund)
 
-      // Reset form after 3 seconds
-      setTimeout(() => setSubmitted(false), 3000)
+      if (selectedFund) {
+        setSubmittedData({
+          amount: Number(formData.amount),
+          fundName: selectedFund.name,
+        })
+        setSubmitted(true)
+        setFormData({ fund: "", amount: "" })
+
+        // Reset form after 3 seconds
+        setTimeout(() => setSubmitted(false), 3000)
+      }
     }
   }
 
@@ -86,8 +99,12 @@ const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
     <PageContainer>
       <FormContainer>
         <Title>Invest in a Cushon ISA</Title>
-        {submitted ? (
-          <SuccessMessage>Investment submitted successfully!</SuccessMessage>
+        {submitted && submittedData ? (
+          <SuccessMessage>
+            Your payment of <strong>£{submittedData.amount.toFixed(2)}</strong>
+            has been successfully submitted to{" "}
+            <strong>{submittedData.fundName}</strong>.
+          </SuccessMessage>
         ) : (
           <form onSubmit={handleSubmit}>
             <FormGroup>
@@ -97,9 +114,12 @@ const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
                 name="fund"
                 value={formData.fund}
                 onChange={handleChange}
+                disabled={availableFunds.length === 0} // Disable if API hasn't loaded
               >
                 <option value="" disabled>
-                  Choose a fund...
+                  {availableFunds.length === 0
+                    ? "Loading funds..."
+                    : "Choose a fund..."}
                 </option>
                 {availableFunds.map((fund) => (
                   <option key={fund.id} value={fund.id}>
@@ -121,11 +141,15 @@ const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
                 placeholder="Enter amount"
                 min={minInvestment}
                 max={maxInvestment}
+                disabled={minInvestment === 0} // Disable input if API hasn't loaded
               />
               {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
             </FormGroup>
 
-            <SubmitButton type="submit" disabled={!isFormValid}>
+            <SubmitButton
+              type="submit"
+              disabled={!isFormValid || availableFunds.length === 0}
+            >
               Invest Now
             </SubmitButton>
           </form>
