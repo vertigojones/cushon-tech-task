@@ -1,5 +1,10 @@
 import styled from "styled-components"
 
+export const PageContainer = styled.div`
+  height: 100vh;
+  background-color: #d3007d;
+`
+
 export const FormContainer = styled.div`
   max-width: 28rem;
   margin: 0 auto;

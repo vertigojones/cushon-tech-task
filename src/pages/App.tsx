@@ -1,6 +1,7 @@
 import { useState, FormEvent, ChangeEvent } from "react"
 import { validateForm } from "../util/validate-form"
 import {
+  PageContainer,
   FormContainer,
   Title,
   FormGroup,
@@ -82,53 +83,55 @@ const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
     formData.fund !== "" && Number(formData.amount) >= minInvestment
 
   return (
-    <FormContainer>
-      <Title>Invest in a Cushon ISA</Title>
-      {submitted ? (
-        <SuccessMessage>Investment submitted successfully!</SuccessMessage>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="fund">Select a Fund</Label>
-            <Select
-              id="fund"
-              name="fund"
-              value={formData.fund}
-              onChange={handleChange}
-            >
-              <option value="" disabled>
-                Choose a fund...
-              </option>
-              {availableFunds.map((fund) => (
-                <option key={fund.id} value={fund.id}>
-                  {fund.name}
+    <PageContainer>
+      <FormContainer>
+        <Title>Invest in a Cushon ISA</Title>
+        {submitted ? (
+          <SuccessMessage>Investment submitted successfully!</SuccessMessage>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="fund">Select a Fund</Label>
+              <Select
+                id="fund"
+                name="fund"
+                value={formData.fund}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Choose a fund...
                 </option>
-              ))}
-            </Select>
-            {errors.fund && <ErrorMessage>{errors.fund}</ErrorMessage>}
-          </FormGroup>
+                {availableFunds.map((fund) => (
+                  <option key={fund.id} value={fund.id}>
+                    {fund.name}
+                  </option>
+                ))}
+              </Select>
+              {errors.fund && <ErrorMessage>{errors.fund}</ErrorMessage>}
+            </FormGroup>
 
-          <FormGroup>
-            <Label htmlFor="amount">Investment Amount (£)</Label>
-            <Input
-              id="amount"
-              type="number"
-              name="amount"
-              value={formData.amount.toString()}
-              onChange={handleChange}
-              placeholder="Enter amount"
-              min={minInvestment}
-              max={maxInvestment}
-            />
-            {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
-          </FormGroup>
+            <FormGroup>
+              <Label htmlFor="amount">Investment Amount (£)</Label>
+              <Input
+                id="amount"
+                type="number"
+                name="amount"
+                value={formData.amount.toString()}
+                onChange={handleChange}
+                placeholder="Enter amount"
+                min={minInvestment}
+                max={maxInvestment}
+              />
+              {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
+            </FormGroup>
 
-          <SubmitButton type="submit" disabled={!isFormValid}>
-            Invest Now
-          </SubmitButton>
-        </form>
-      )}
-    </FormContainer>
+            <SubmitButton type="submit" disabled={!isFormValid}>
+              Invest Now
+            </SubmitButton>
+          </form>
+        )}
+      </FormContainer>
+    </PageContainer>
   )
 }
 
