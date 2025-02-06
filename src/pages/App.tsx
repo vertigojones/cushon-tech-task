@@ -1,4 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from "react"
+import { validateForm } from "../util/validate-form" // Import validation function
 import {
   FormContainer,
   Title,
@@ -9,7 +10,7 @@ import {
   ErrorMessage,
   SubmitButton,
   SuccessMessage,
-} from "../styles/global-styles"
+} from "../styles/global-styles" // Import styled components
 
 const funds = [
   { id: "equities", name: "Cushon Equities Fund" },
@@ -22,11 +23,6 @@ interface FormData {
   amount: number | ""
 }
 
-interface FormErrors {
-  fund: string
-  amount: string
-}
-
 export default function ISAInvestmentForm() {
   const [submitted, setSubmitted] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -34,39 +30,18 @@ export default function ISAInvestmentForm() {
     amount: "",
   })
 
-  const [errors, setErrors] = useState<FormErrors>({
+  const [errors, setErrors] = useState({
     fund: "",
     amount: "",
   })
 
-  const validateForm = () => {
-    const newErrors = {
-      fund: "",
-      amount: "",
-    }
-    let isValid = true
-
-    if (!formData.fund) {
-      newErrors.fund = "Please select a fund"
-      isValid = false
-    }
-
-    const amount = Number(formData.amount)
-    if (!amount || amount < 25) {
-      newErrors.amount = "Minimum investment is £25"
-      isValid = false
-    } else if (amount > 20000) {
-      newErrors.amount = "Maximum investment is £20,000"
-      isValid = false
-    }
-
-    setErrors(newErrors)
-    return isValid
-  }
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (validateForm()) {
+    const validationResults = validateForm(formData)
+
+    setErrors(validationResults)
+
+    if (validationResults.isValid) {
       console.log("Investment Data:", formData)
       setSubmitted(true)
       setFormData({ fund: "", amount: "" })
@@ -80,14 +55,13 @@ export default function ISAInvestmentForm() {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-
     setFormData((prev) => ({
       ...prev,
       [name]: name === "amount" ? Math.max(0, Number(value)) : value,
     }))
   }
 
-  const isFormValid = formData.fund !== "" && Number(formData.amount) >= 25
+  const isFormValid = formData.fund !== "" && Number(formData.amount) >= 100
 
   return (
     <FormContainer>
@@ -125,7 +99,7 @@ export default function ISAInvestmentForm() {
               value={formData.amount.toString()}
               onChange={handleChange}
               placeholder="Enter amount"
-              min="25"
+              min="100"
               max="20000"
             />
             {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
