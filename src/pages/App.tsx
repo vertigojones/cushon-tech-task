@@ -1,19 +1,14 @@
 import styled from "styled-components"
-import { FC, useEffect } from "react"
-import { handleHubspotApiData } from "../util/handle-hubspot-api-data"
+import { FC } from "react"
 
-type ApiPageProps = {}
+type CushonPageProps = {}
 
-const ApiPageContainer = styled.div`
+const CushonPageContainer = styled.div`
   /* Add styles here if needed */
 `
 
-const ApiPage: FC<ApiPageProps> = () => {
-  useEffect(() => {
-    handleHubspotApiData() // Fetch and log data
-  }, [])
-
-  return <ApiPageContainer>Hello World</ApiPageContainer>
+const CushonPage: FC<CushonPageProps> = () => {
+  return <CushonPageContainer>Hello World</CushonPageContainer>
 }
 
-export default ApiPage
+export default CushonPage

@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",          // Target modern JavaScript
-    "module": "CommonJS",       // Use CommonJS modules
-    "jsx": "react-jsx",         // Enable JSX for React 17+
-    "strict": true,             // Enable strict type-checking
-    "esModuleInterop": true,    // Handle CommonJS/ES module compatibility
-    "skipLibCheck": true,       // Skip type-checking of declaration files
-    "forceConsistentCasingInFileNames": true // Enforce consistent file casing
+    "target": "ES2020",                       // Target modern JavaScript
+    "module": "CommonJS",                     // Use CommonJS modules
+    "jsx": "react-jsx",                       // Enable JSX for React 17+
+    "strict": true,                           // Enable strict type-checking
+    "esModuleInterop": true,                  // Handle CommonJS/ES module compatibility
+    "skipLibCheck": true,                     // Skip type-checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent file casing
+    "types": ["react", "react-dom"]
   },
-  "include": ["src"]            // Specify the files to include
+  "include": ["src"]                          // Specify the files to include
 }
