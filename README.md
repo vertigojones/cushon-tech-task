@@ -1,68 +1,120 @@
 # Getting Started with Cushon Tech Task
 
+This is a front-end application built using **React, TypeScript, and Styled Components** to implement an **ISA investment selection interface** for Cushon.
+
+## Features
+
+- **React + TypeScript**: Strongly typed components for better development experience.
+- **Styled Components**: Modular CSS-in-JS styling approach.
+- **Form Validation**: Client-side validation using a dedicated validation function.
+- **Unit & Integration Tests**: Uses Jest and Cucumber for testing.
+- **Reusable Components**: Separation of UI components and business logic.
+
+## Installation
+
+Clone the repository and install dependencies:
+
+```sh
+# Clone the repository
+git clone https://github.com/your-repo/cushon-tech-task.git
+cd cushon-tech-task
+
+# Install dependencies
+yarn install
+```
+
 ## Available Scripts
 
-In the project directory, you can run:
+### `yarn start`
 
-### `yarn dev`
+Runs the app.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```sh
+yarn start
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The page will reload when you make changes.
 
 ### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs Jest and Cucumber tests.
+
+```sh
+yarn test
+```
+
+Tests include:
+
+- Unit tests for validation functions (`validateForm.ts`).
+- Cucumber-based integration tests for form behavior.
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Creates an optimized production build.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```sh
+yarn build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The production-ready files are stored in the `build/` directory.
 
 ### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+If you need to customize configurations, you can eject the project:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sh
+yarn eject
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Warning:** This is a one-way operation and cannot be undone.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project Structure
+
+```
+├── src/
+│   ├── components/        # React components
+│   ├── features/          # Cucumber feature files and steps
+│   ├── pages/             # Pages on the app as React components
+│   ├── styles/            # Styled Components global styles
+│   ├── tests/             # Unit and integration tests
+│   ├── util/              # Utility functions (e.g., validation)
+│   ├── types/             # Global TypeScript type definitions (TBD)
+│   ├── index.js           # React entry point
+│   └── ...
+└── README.md
+```
+
+## Testing
+
+### Running Jest Unit Tests
+
+To run Jest-based unit tests:
+
+```sh
+yarn test
+```
+
+### Running Cucumber Tests
+
+Ensure Cucumber is installed:
+
+```sh
+npx cucumber-js
+```
+
+## Deployment
+
+To deploy the app:
+
+```sh
+yarn build
+# Deploy the contents of the `build/` folder to your hosting provider
+```
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [React Documentation](https://reactjs.org/)
+- [TypeScript Documentation](https://www.typescriptlang.org/)
+- [Styled Components](https://styled-components.com/)
+- [Jest Testing](https://jestjs.io/)
+- [Cucumber Testing](https://cucumber.io/)
