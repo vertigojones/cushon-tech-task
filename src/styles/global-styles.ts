@@ -35,6 +35,7 @@ export const Label = styled.label`
 
 export const Select = styled.select`
   width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
@@ -52,6 +53,7 @@ export const Select = styled.select`
 
 export const Input = styled.input`
   width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
@@ -79,6 +81,7 @@ export const ErrorMessage = styled.p`
 
 export const SubmitButton = styled.button`
   width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem;
   background-color: ${({ disabled }) => (disabled ? "#9ca3af" : "#2563eb")};
   color: white;
