@@ -9,7 +9,9 @@ interface FormErrors {
 }
 
 export const validateForm = (
-  formData: FormData
+  formData: FormData,
+  minInvestment: number = 25,
+  maxInvestment: number = 20000
 ): FormErrors & { isValid: boolean } => {
   const newErrors: FormErrors = {
     fund: "",
@@ -23,11 +25,11 @@ export const validateForm = (
   }
 
   const amount = Number(formData.amount)
-  if (!amount || amount < 100) {
-    newErrors.amount = "Minimum investment is £100"
+  if (!amount || amount < minInvestment) {
+    newErrors.amount = `Minimum investment is £${minInvestment}`
     isValid = false
-  } else if (amount > 20000) {
-    newErrors.amount = "Maximum investment is £20,000"
+  } else if (amount > maxInvestment) {
+    newErrors.amount = `Maximum investment is £${maxInvestment}`
     isValid = false
   }
 

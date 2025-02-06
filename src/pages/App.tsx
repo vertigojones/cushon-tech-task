@@ -1,5 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from "react"
-import { validateForm } from "../util/validate-form" // Import validation function
+import { validateForm } from "../util/validate-form"
 import {
   FormContainer,
   Title,
@@ -10,20 +10,33 @@ import {
   ErrorMessage,
   SubmitButton,
   SuccessMessage,
-} from "../styles/global-styles" // Import styled components
+} from "../styles/global-styles"
 
-const funds = [
-  { id: "equities", name: "Cushon Equities Fund" },
-  { id: "bonds", name: "Cushon Bonds Fund" },
-  { id: "mixed", name: "Cushon Mixed Fund" },
-] as const
+interface Fund {
+  id: string
+  name: string
+}
+
+interface ISAInvestmentFormProps {
+  availableFunds?: Fund[] // Makes funds optional (uses default props)
+  minInvestment?: number
+  maxInvestment?: number
+}
 
 interface FormData {
   fund: string
   amount: number | ""
 }
 
-export default function ISAInvestmentForm() {
+const ISAInvestmentForm: React.FC<ISAInvestmentFormProps> = ({
+  availableFunds = [
+    { id: "equities", name: "Cushon Equities Fund" },
+    { id: "bonds", name: "Cushon Bonds Fund" },
+    { id: "mixed", name: "Cushon Mixed Fund" },
+  ],
+  minInvestment = 25,
+  maxInvestment = 20000,
+}) => {
   const [submitted, setSubmitted] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     fund: "",
@@ -35,9 +48,13 @@ export default function ISAInvestmentForm() {
     amount: "",
   })
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const validationResults = validateForm(formData)
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const validationResults = validateForm(
+      formData,
+      minInvestment,
+      maxInvestment
+    )
 
     setErrors(validationResults)
 
@@ -52,16 +69,17 @@ export default function ISAInvestmentForm() {
   }
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target
+    const { name, value } = event.target
     setFormData((prev) => ({
       ...prev,
       [name]: name === "amount" ? Math.max(0, Number(value)) : value,
     }))
   }
 
-  const isFormValid = formData.fund !== "" && Number(formData.amount) >= 100
+  const isFormValid =
+    formData.fund !== "" && Number(formData.amount) >= minInvestment
 
   return (
     <FormContainer>
@@ -81,7 +99,7 @@ export default function ISAInvestmentForm() {
               <option value="" disabled>
                 Choose a fund...
               </option>
-              {funds.map((fund) => (
+              {availableFunds.map((fund) => (
                 <option key={fund.id} value={fund.id}>
                   {fund.name}
                 </option>
@@ -99,8 +117,8 @@ export default function ISAInvestmentForm() {
               value={formData.amount.toString()}
               onChange={handleChange}
               placeholder="Enter amount"
-              min="100"
-              max="20000"
+              min={minInvestment}
+              max={maxInvestment}
             />
             {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
           </FormGroup>
@@ -113,3 +131,5 @@ export default function ISAInvestmentForm() {
     </FormContainer>
   )
 }
+
+export default ISAInvestmentForm
