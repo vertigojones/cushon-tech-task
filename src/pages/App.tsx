@@ -18,7 +18,7 @@ interface Fund {
 }
 
 interface ISAInvestmentFormProps {
-  availableFunds?: Fund[] // Makes funds optional (uses default props)
+  availableFunds?: Fund[]
   minInvestment?: number
   maxInvestment?: number
 }
