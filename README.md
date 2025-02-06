@@ -74,11 +74,12 @@ yarn eject
 ├── src/
 │   ├── components/        # React components
 │   ├── features/          # Cucumber feature files and steps
+│   ├── mock/              # Mock data for testing
 │   ├── pages/             # Pages on the app as React components
 │   ├── styles/            # Styled Components global styles
 │   ├── tests/             # Unit and integration tests
 │   ├── util/              # Utility functions (e.g., validation)
-│   ├── types/             # Global TypeScript type definitions (TBD)
+│   ├── types/             # @todo - add later
 │   ├── index.js           # React entry point
 │   └── ...
 └── README.md
