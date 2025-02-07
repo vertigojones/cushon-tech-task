@@ -51,6 +51,7 @@ const ISAInvestmentForm: React.FC = () => {
 
   /**
    * Fetch mock investment options from API on component mount
+   * @todo - create type for data object
    */
   useEffect(() => {
     fetchISAInvestmentOptions().then((data: any) => {

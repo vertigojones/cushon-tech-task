@@ -3,9 +3,9 @@ export const fetchISAInvestmentOptions = async () => {
     setTimeout(() => {
       resolve({
         availableFunds: [
-          { id: "equities", name: "Cushon Equities Fund" },
-          { id: "bonds", name: "Cushon Bonds Fund" },
-          { id: "mixed", name: "Cushon Mixed Fund" },
+          { id: "uk-equity", name: "Cushon Global Equity" },
+          { id: "global-bonds", name: "Cushon Global Bonds" },
+          { id: "cash", name: "Cushon Cash" },
         ],
         minInvestment: 25,
         maxInvestment: 20000,

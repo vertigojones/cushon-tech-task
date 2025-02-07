@@ -8,7 +8,7 @@ This is a front-end application built using **React, TypeScript, and Styled Comp
 - **Styled Components**: Modular CSS-in-JS styling approach.
 - **Form Validation**: Client-side validation using a dedicated validation function.
 - **Unit & Integration Tests**: Uses Jest and Cucumber for testing.
-- **Reusable Components**: Separation of UI components and business logic.
+- **Reusable Components**: Separation of UI components and business logic (to be refined further)
 
 ## Installation
 
@@ -16,7 +16,7 @@ Clone the repository and install dependencies:
 
 ```sh
 # Clone the repository
-git clone https://github.com/your-repo/cushon-tech-task.git
+git clone https://github.com/vertigojones/cushon-tech-task.git
 cd cushon-tech-task
 
 # Install dependencies
@@ -119,3 +119,12 @@ yarn build
 - [Styled Components](https://styled-components.com/)
 - [Jest Testing](https://jestjs.io/)
 - [Cucumber Testing](https://cucumber.io/)
+
+## Future Refinement Considerations
+
+1. Refactor into smaller, more reusable components
+2. Move type interfaces into a global TS file to be reused
+3. Add test unit cases for all components
+4. Consider using Storybook for a component library, especially if possibility of sharing with other repos
+5. Add Context API provider for data retrieval if this data may be used in other areas of the codebase
+6. Create data type for the investment data coming from the API
