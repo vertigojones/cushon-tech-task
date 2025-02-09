@@ -14,7 +14,7 @@ interface FormErrors {
  *
  * @param formData - The user's investment form data
  * @param minInvestment - The minimum allowed investment (default: £25)
- * @param maxInvestment - The maximum allowed investment (default: £20,000)
+ * @param maxInvestment - The maximum allowed investment (default: £25,000)
  * @returns An object containing validation errors and a boolean `isValid` flag
  */
 export const validateForm = (
