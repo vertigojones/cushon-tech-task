@@ -20,7 +20,7 @@ interface FormErrors {
 export const validateForm = (
   formData: FormData,
   minInvestment: number = 25,
-  maxInvestment: number = 20000
+  maxInvestment: number = 25000
 ): FormErrors & { isValid: boolean } => {
   // Initialize error messages
   const newErrors: FormErrors = {

@@ -44,20 +44,21 @@ Feature: Validate ISA Investment Form
     And enters an amount of 25000
     When the form is validated
     Then the form should be invalid
-    And the error message should be "Maximum investment is £20000"
+    And the error message should be "Maximum investment is £25000"
 
+  // This is the specific use case requested
   Scenario: Investment exactly at maximum limit
     Given a user selects the "Cushon Global Equity" fund
-    And enters an amount of 20000
+    And enters an amount of 25000
     When the form is validated
     Then the form should be valid
 
   Scenario: Investment with decimal above maximum limit
     Given a user selects the "Cushon Global Bonds" fund
-    And enters an amount of 20000.01
+    And enters an amount of 25000.01
     When the form is validated
     Then the form should be invalid
-    And the error message should be "Maximum investment is £20000"
+    And the error message should be "Maximum investment is £25000"
 
   Scenario: Invalid input with multiple decimal places
     Given a user selects the "Cushon Cash" fund

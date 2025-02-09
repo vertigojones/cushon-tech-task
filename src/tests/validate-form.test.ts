@@ -2,7 +2,7 @@ import { validateForm } from "../util/validate-form"
 
 describe("validateForm", () => {
   const minInvestment = 25
-  const maxInvestment = 20000
+  const maxInvestment = 25000 // Updated maximum investment
 
   test("valid form data", () => {
     const formData = { fund: "Cushon Global Equity", amount: 100 }
@@ -46,23 +46,24 @@ describe("validateForm", () => {
   })
 
   test("investment above maximum limit", () => {
-    const formData = { fund: "Cushon Cash", amount: 25000 }
+    const formData = { fund: "Cushon Cash", amount: 26000 }
     const result = validateForm(formData, minInvestment, maxInvestment)
     expect(result.isValid).toBe(false)
-    expect(result.amount).toBe("Maximum investment is £20000")
+    expect(result.amount).toBe("Maximum investment is £25000")
   })
 
+  // This is the specific use case requested
   test("investment exactly at maximum limit", () => {
-    const formData = { fund: "Cushon Global Equity", amount: 20000 }
+    const formData = { fund: "Cushon Global Equity", amount: 25000 }
     const result = validateForm(formData, minInvestment, maxInvestment)
     expect(result.isValid).toBe(true)
   })
 
   test("investment with decimal above maximum limit", () => {
-    const formData = { fund: "Cushon Global Bonds", amount: 20000.01 }
+    const formData = { fund: "Cushon Global Bonds", amount: 25000.01 }
     const result = validateForm(formData, minInvestment, maxInvestment)
     expect(result.isValid).toBe(false)
-    expect(result.amount).toBe("Maximum investment is £20000")
+    expect(result.amount).toBe("Maximum investment is £25000")
   })
 
   test("invalid input with multiple decimal places", () => {

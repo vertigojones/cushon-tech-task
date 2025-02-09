@@ -8,8 +8,8 @@ export const fetchISAInvestmentOptions = async () => {
           { id: "cash", name: "Cushon Cash" },
         ],
         minInvestment: 25,
-        maxInvestment: 20000,
+        maxInvestment: 25000,
       })
-    }, 500) // Simulates API response delay
+    }, 500)
   })
 }

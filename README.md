@@ -10,6 +10,14 @@ This is a front-end application built using **React, TypeScript, and Styled Comp
 - **Unit & Integration Tests**: Uses Jest and Cucumber for testing.
 - **Reusable Components**: Separation of UI components and business logic (to be refined further)
 
+## Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (Recommended: LTS version)
+- [Yarn](https://yarnpkg.com/) (Run `npm install -g yarn` to install)
+- [Cucumber.js](https://cucumber.io/) (Needed for running integration tests)
+
 ## Installation
 
 Clone the repository and install dependencies:
@@ -120,6 +128,35 @@ yarn build
 - [Jest Testing](https://jestjs.io/)
 - [Cucumber Testing](https://cucumber.io/)
 
+## Using the App
+
+### How to Use
+
+1. **Start the application** by running:
+   ```sh
+   yarn start
+   ```
+2. **Select a fund** from the dropdown menu.
+3. **Enter an investment amount** (minimum £25, maximum £25,000).
+4. **Submit the form** by clicking "Invest Now."
+5. If the submission is successful, a confirmation message will appear.
+6. **Review past investments** displayed below the form.
+
+### Example Usage
+
+- To invest **£5000** in "Cushon Global Bonds":
+
+  1. Select "Cushon Global Bonds."
+  2. Enter `5000` in the amount field.
+  3. Click "Invest Now."
+  4. See the confirmation message and past investment log.
+
+- To test the **£25,000 use case**:
+  1. Select "Cushon Global Equity."
+  2. Enter `25000` as the amount.
+  3. Submit the form.
+  4. Ensure validation allows the investment.
+
 ## Future Refinement Considerations
 
 1. Refactor into smaller, more reusable components
@@ -128,3 +165,4 @@ yarn build
 4. Consider using Storybook for a component library, especially if possibility of sharing with other repos
 5. Add Context API provider for data retrieval if this data may be used in other areas of the codebase
 6. Create data type for the investment data coming from the API
+7. Add commas to denote the thousands of pounds in monetary values

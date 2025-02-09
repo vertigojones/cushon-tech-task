@@ -24,18 +24,24 @@ interface FormData {
   amount: string
 }
 
+interface Investment {
+  amount: string
+  fundName: string
+  timestamp: string
+}
+
 const ISAInvestmentForm: React.FC = () => {
   // State for investment options
   const [availableFunds, setAvailableFunds] = useState<Fund[]>([])
   const [minInvestment, setMinInvestment] = useState<number>(0)
   const [maxInvestment, setMaxInvestment] = useState<number>(0)
 
+  // State for storing past investments
+  const [investmentHistory, setInvestmentHistory] = useState<Investment[]>([])
+
   // State to track form submission and display success message
   const [submitted, setSubmitted] = useState(false)
-  const [submittedData, setSubmittedData] = useState<{
-    amount: string
-    fundName: string
-  } | null>(null)
+  const [submittedData, setSubmittedData] = useState<Investment | null>(null)
 
   // State to store user input
   const [formData, setFormData] = useState<FormData>({
@@ -50,8 +56,7 @@ const ISAInvestmentForm: React.FC = () => {
   })
 
   /**
-   * Fetch mock investment options from API on component mount
-   * @todo - create type for data object
+   * Fetch mock investment options and past investments on component mount
    */
   useEffect(() => {
     fetchISAInvestmentOptions().then((data: any) => {
@@ -59,18 +64,23 @@ const ISAInvestmentForm: React.FC = () => {
       setMinInvestment(data.minInvestment)
       setMaxInvestment(data.maxInvestment)
     })
+
+    // Retrieve stored investments
+    const storedInvestments = JSON.parse(
+      localStorage.getItem("investments") || "[]"
+    )
+    setInvestmentHistory(storedInvestments)
   }, [])
 
   /**
    * Handle form submission
-   * @param event - Form submission event
    */
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     // Validate the form
     const validationResults = validateForm(
-      { ...formData, amount: parseFloat(formData.amount) || 0 }, // Convert amount to number for validation
+      { ...formData, amount: parseFloat(formData.amount) || 0 },
       minInvestment,
       maxInvestment
     )
@@ -82,16 +92,26 @@ const ISAInvestmentForm: React.FC = () => {
       const selectedFund = availableFunds.find((f) => f.id === formData.fund)
 
       if (selectedFund) {
-        // Store submitted data to show in success message
-        setSubmittedData({
-          amount: parseFloat(formData.amount).toFixed(2), // Format to 2 decimal places
+        // Create new investment entry
+        const newInvestment = {
+          amount: parseFloat(formData.amount).toFixed(2),
           fundName: selectedFund.name,
-        })
+          timestamp: new Date().toISOString(),
+        }
 
+        setSubmittedData(newInvestment)
         setSubmitted(true)
-
-        // Reset form fields
         setFormData({ fund: "", amount: "" })
+
+        // Save investment details to localStorage
+        const previousInvestments = JSON.parse(
+          localStorage.getItem("investments") || "[]"
+        )
+        const updatedInvestments = [...previousInvestments, newInvestment]
+        localStorage.setItem("investments", JSON.stringify(updatedInvestments))
+
+        // Update state to reflect new investments
+        setInvestmentHistory(updatedInvestments)
 
         // Hide success message after 5 seconds
         setTimeout(() => setSubmitted(false), 5000)
@@ -101,7 +121,6 @@ const ISAInvestmentForm: React.FC = () => {
 
   /**
    * Handle form input changes
-   * @param event - Change event from input or select element
    */
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -141,7 +160,6 @@ const ISAInvestmentForm: React.FC = () => {
             <strong>{submittedData.fundName}</strong>.
           </SuccessMessage>
         ) : (
-          // Display the form when not submitted
           <form onSubmit={handleSubmit}>
             {/* Fund Selection */}
             <FormGroup>
@@ -151,7 +169,7 @@ const ISAInvestmentForm: React.FC = () => {
                 name="fund"
                 value={formData.fund}
                 onChange={handleChange}
-                disabled={availableFunds.length === 0} // Disable if API hasn't loaded
+                disabled={availableFunds.length === 0}
               >
                 <option value="" disabled>
                   {availableFunds.length === 0
@@ -172,14 +190,14 @@ const ISAInvestmentForm: React.FC = () => {
               <Label htmlFor="amount">Investment Amount (£)</Label>
               <Input
                 id="amount"
-                type="text" // Keep as text to allow decimal input properly
+                type="text"
                 name="amount"
                 value={formData.amount}
                 onChange={handleChange}
                 placeholder="Enter amount"
                 min={minInvestment}
                 max={maxInvestment}
-                disabled={minInvestment === 0} // Disable input if API hasn't loaded
+                disabled={minInvestment === 0}
               />
               {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
             </FormGroup>
@@ -192,6 +210,23 @@ const ISAInvestmentForm: React.FC = () => {
               Invest Now
             </SubmitButton>
           </form>
+        )}
+
+        {/* Display Past Investments */}
+        {investmentHistory.length > 0 && (
+          <div>
+            <h3>Past Investments</h3>
+            <ul>
+              {investmentHistory.map((investment, index) => (
+                <li key={index}>
+                  <strong>£{investment.amount}</strong> invested in{" "}
+                  <strong>{investment.fundName}</strong> on{" "}
+                  {new Date(investment.timestamp).toLocaleDateString()} at{" "}
+                  {new Date(investment.timestamp).toLocaleTimeString()}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </FormContainer>
     </PageContainer>
