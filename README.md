@@ -170,3 +170,4 @@ yarn build
 5. Add Context API provider for data retrieval if this data may be used in other areas of the codebase
 6. Create data type for the investment data coming from the API
 7. Add commas to denote the thousands of pounds in monetary values
+8. Consider more thorough testing and edge cases
