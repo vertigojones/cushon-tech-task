@@ -221,8 +221,8 @@ const ISAInvestmentForm: React.FC = () => {
                 <li key={index}>
                   <strong>£{investment.amount}</strong> invested in{" "}
                   <strong>{investment.fundName}</strong> on{" "}
-                  {new Date(investment.timestamp).toLocaleDateString()} at{" "}
-                  {new Date(investment.timestamp).toLocaleTimeString()}
+                  {new Date(investment.timestamp).toLocaleDateString("en-GB")}{" "}
+                  at {new Date(investment.timestamp).toLocaleTimeString()}
                 </li>
               ))}
             </ul>
