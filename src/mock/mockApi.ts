@@ -3,7 +3,7 @@ export const fetchISAInvestmentOptions = async () => {
     setTimeout(() => {
       resolve({
         availableFunds: [
-          { id: "uk-equity", name: "Cushon Global Equity" },
+          { id: "global-equity", name: "Cushon Global Equity" },
           { id: "global-bonds", name: "Cushon Global Bonds" },
           { id: "cash", name: "Cushon Cash" },
         ],
