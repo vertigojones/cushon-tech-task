@@ -2,6 +2,10 @@
 
 This is a front-end application built using **React, TypeScript, and Styled Components** to implement an **ISA investment selection interface** for Cushon.
 
+## Staging Site
+
+A staging site can be used for testing purposes [here](https://cozy-chaja-e76fe5.netlify.app/).
+
 ## Features
 
 - **React + TypeScript**: Strongly typed components for better development experience.
