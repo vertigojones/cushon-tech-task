@@ -171,3 +171,4 @@ yarn build
 6. Create data type for the investment data coming from the API
 7. Add commas to denote the thousands of pounds in monetary values
 8. Consider more thorough testing and edge cases
+9. Refine the UI so that the sections (ie. form, success/error messages and past investments list) are separated and not expanding or shrinking the container
