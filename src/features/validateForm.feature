@@ -13,11 +13,11 @@ Feature: Validate ISA Investment Form
     Then the form should be valid
 
   Scenario: Missing fund selection
-    Given a user does not select a fund
+    Given a user does not select any funds
     And enters an amount of 100
     When the form is validated
     Then the form should be invalid
-    And the error message should be "Please select a fund"
+    And the error message should be "Please select at least one fund"
 
   Scenario: Investment below minimum limit
     Given a user selects the "Cushon Cash" fund
@@ -46,7 +46,7 @@ Feature: Validate ISA Investment Form
     Then the form should be invalid
     And the error message should be "Maximum investment is £25000"
 
-  // This is the specific use case requested
+  # This is the specific use case requested
   Scenario: Investment exactly at maximum limit
     Given a user selects the "Cushon Global Equity" fund
     And enters an amount of 25000

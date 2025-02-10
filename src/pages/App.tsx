@@ -20,13 +20,13 @@ interface Fund {
 }
 
 interface FormData {
-  fund: string
+  funds: string[] // Ready for multiple funds but only using one for now
   amount: string
 }
 
 interface Investment {
   amount: string
-  fundName: string
+  funds: { id: string; name: string }[]
   timestamp: string
 }
 
@@ -45,13 +45,13 @@ const ISAInvestmentForm: React.FC = () => {
 
   // State to store user input
   const [formData, setFormData] = useState<FormData>({
-    fund: "",
+    funds: [],
     amount: "",
   })
 
   // State to store form validation errors
-  const [errors, setErrors] = useState({
-    fund: "",
+  const [errors, setErrors] = useState<{ funds: string; amount: string }>({
+    funds: "",
     amount: "",
   })
 
@@ -65,7 +65,7 @@ const ISAInvestmentForm: React.FC = () => {
       setMaxInvestment(data.maxInvestment)
     })
 
-    // Retrieve stored investments
+    // Retrieve stored investments from local storage
     const storedInvestments = JSON.parse(
       localStorage.getItem("investments") || "[]"
     )
@@ -74,6 +74,7 @@ const ISAInvestmentForm: React.FC = () => {
 
   /**
    * Handle form submission
+   * Validates input, stores investment, and updates history
    */
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -88,64 +89,66 @@ const ISAInvestmentForm: React.FC = () => {
     setErrors(validationResults)
 
     if (validationResults.isValid) {
-      // Find the selected fund name based on the fund ID
-      const selectedFund = availableFunds.find((f) => f.id === formData.fund)
+      // Convert selected fund ID to full fund object
+      const selectedFunds = formData.funds.map((fundId) => {
+        const fund = availableFunds.find((f) => f.id === fundId)
+        return { id: fundId, name: fund?.name || "Unknown Fund" }
+      })
 
-      if (selectedFund) {
-        // Create new investment entry
-        const newInvestment = {
-          amount: parseFloat(formData.amount).toFixed(2),
-          fundName: selectedFund.name,
-          timestamp: new Date().toISOString(),
-        }
-
-        setSubmittedData(newInvestment)
-        setSubmitted(true)
-        setFormData({ fund: "", amount: "" })
-
-        // Save investment details to localStorage
-        const previousInvestments = JSON.parse(
-          localStorage.getItem("investments") || "[]"
-        )
-        const updatedInvestments = [...previousInvestments, newInvestment]
-        localStorage.setItem("investments", JSON.stringify(updatedInvestments))
-
-        // Update state to reflect new investments
-        setInvestmentHistory(updatedInvestments)
-
-        // Hide success message after 5 seconds
-        setTimeout(() => setSubmitted(false), 5000)
+      // Create new investment entry
+      const newInvestment: Investment = {
+        amount: parseFloat(formData.amount).toFixed(2),
+        funds: selectedFunds,
+        timestamp: new Date().toISOString(),
       }
+
+      // Store submitted data for UI feedback
+      setSubmittedData(newInvestment)
+      setSubmitted(true)
+      setFormData({ funds: [], amount: "" })
+
+      // Save investment details to localStorage
+      const previousInvestments = JSON.parse(
+        localStorage.getItem("investments") || "[]"
+      )
+      const updatedInvestments = [...previousInvestments, newInvestment]
+      localStorage.setItem("investments", JSON.stringify(updatedInvestments))
+      setInvestmentHistory(updatedInvestments)
+
+      // Hide success message after 5 seconds
+      setTimeout(() => setSubmitted(false), 5000)
     }
   }
 
   /**
    * Handle form input changes
+   * Updates state dynamically based on user input
    */
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = event.target
 
-    if (name === "amount") {
+    if (name === "funds") {
+      // Store selected fund in an array (ready for future multi-fund selection)
+      setFormData((prev) => ({
+        ...prev,
+        funds: [value],
+      }))
+    } else if (name === "amount") {
       // Allow only numbers with up to 2 decimal places
       if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
         setFormData((prev) => ({
           ...prev,
-          amount: value, // Keep as string to preserve user input
+          amount: value,
         }))
       }
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }))
     }
   }
 
   // Check if the form is valid for submission
   const isFormValid =
-    formData.fund !== "" && parseFloat(formData.amount) >= minInvestment
+    formData.funds.length > 0 && parseFloat(formData.amount) >= minInvestment
 
   return (
     <PageContainer>
@@ -156,18 +159,22 @@ const ISAInvestmentForm: React.FC = () => {
         {submitted && submittedData ? (
           <SuccessMessage>
             Your payment of <strong>£{submittedData.amount}</strong> has been
-            successfully submitted to your{" "}
-            <strong>{submittedData.fundName}</strong>.
+            successfully submitted to your
+            <strong>
+              {" "}
+              {submittedData.funds.map((fund) => fund.name).join(", ")}
+            </strong>
+            .
           </SuccessMessage>
         ) : (
           <form onSubmit={handleSubmit}>
-            {/* Fund Selection */}
+            {/* Fund Selection - Using dropdown but ready for multi-fund */}
             <FormGroup>
-              <Label htmlFor="fund">Select a Fund</Label>
+              <Label>Select a Fund</Label>
               <Select
-                id="fund"
-                name="fund"
-                value={formData.fund}
+                id="funds"
+                name="funds"
+                value={formData.funds[0] || ""}
                 onChange={handleChange}
                 disabled={availableFunds.length === 0}
               >
@@ -182,14 +189,13 @@ const ISAInvestmentForm: React.FC = () => {
                   </option>
                 ))}
               </Select>
-              {errors.fund && <ErrorMessage>{errors.fund}</ErrorMessage>}
+              {errors.funds && <ErrorMessage>{errors.funds}</ErrorMessage>}
             </FormGroup>
 
             {/* Investment Amount Input */}
             <FormGroup>
-              <Label htmlFor="amount">Investment Amount (£)</Label>
+              <Label>Investment Amount (£)</Label>
               <Input
-                id="amount"
                 type="text"
                 name="amount"
                 value={formData.amount}
@@ -197,7 +203,6 @@ const ISAInvestmentForm: React.FC = () => {
                 placeholder="Enter amount"
                 min={minInvestment}
                 max={maxInvestment}
-                disabled={minInvestment === 0}
               />
               {errors.amount && <ErrorMessage>{errors.amount}</ErrorMessage>}
             </FormGroup>
@@ -219,8 +224,13 @@ const ISAInvestmentForm: React.FC = () => {
             <ul>
               {investmentHistory.map((investment, index) => (
                 <li key={index}>
-                  <strong>£{investment.amount}</strong> invested in{" "}
-                  <strong>{investment.fundName}</strong> on{" "}
+                  <strong>£{investment.amount}</strong> invested in
+                  <strong>
+                    {" "}
+                    {investment.funds?.map((fund) => fund.name).join(", ") ||
+                      "Unknown Fund"}
+                  </strong>{" "}
+                  on{" "}
                   {new Date(investment.timestamp).toLocaleDateString("en-GB")}{" "}
                   at {new Date(investment.timestamp).toLocaleTimeString()}
                 </li>

@@ -1,10 +1,10 @@
 interface FormData {
-  fund: string
+  funds: string[] // Updated to support multiple fund selections
   amount: number | ""
 }
 
 interface FormErrors {
-  fund: string
+  funds: string
   amount: string
 }
 
@@ -24,17 +24,16 @@ export const validateForm = (
 ): FormErrors & { isValid: boolean } => {
   // Initialize error messages
   const newErrors: FormErrors = {
-    fund: "",
+    funds: "",
     amount: "",
   }
   let isValid = true
 
   /**
-   * 1. Validate Fund Selection - Ensures that a fund is selected.
-   * - Ensures that a fund is selected.
+   * 1. Validate Fund Selection - Ensures that at least one fund is selected.
    */
-  if (!formData.fund) {
-    newErrors.fund = "Please select a fund"
+  if (!formData.funds.length) {
+    newErrors.funds = "Please select at least one fund"
     isValid = false
   }
 
@@ -69,11 +68,10 @@ export const validateForm = (
     newErrors.amount = `Minimum investment is £${minInvestment}`
     isValid = false
   } else if (amount > maxInvestment) {
-
-  /**
-   * 5️. Validate Maximum Investment Limit
-   * - Ensures the amount does not exceed the maximum investment threshold.
-   */
+    /**
+     * 5️. Validate Maximum Investment Limit
+     * - Ensures the amount does not exceed the maximum investment threshold.
+     */
     newErrors.amount = `Maximum investment is £${maxInvestment}`
     isValid = false
   }
